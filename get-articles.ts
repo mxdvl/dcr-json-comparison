@@ -2,14 +2,15 @@ import { array, literal, number, object, string } from "./zod/zod.ts";
 
 const key = "test";
 
-type DateString = `${number}-${number}-${number}`;
-type Options = { date: DateString; size?: number };
+type Options = { date: Date; size?: number };
 const capiSearchUrl = ({ date, size = 10 }: Options) => {
+  /** YYYY-MM-DD */
+  const dateString = date.toISOString().slice(0, 10);
   const search = new URLSearchParams({
     "page-size": String(size),
     // page: String(page),
-    "from-date": date,
-    "to-date": date,
+    "from-date": dateString,
+    "to-date": dateString,
     "api-key": key,
   });
   const url = new URL(
@@ -44,11 +45,17 @@ const resultsSchema = object({
 });
 
 const json: unknown = await fetch(
-  capiSearchUrl({ date: "2022-08-01", size: 1 })
+  capiSearchUrl({ date: new Date(), size: 1 })
 ).then((r) => r.json());
 const {
   response: { total },
 } = totalSchema.parse(json);
+
+const rand = (from: number, to: number) =>
+  Math.round(Math.random() * (to - from)) + from;
+
+const randDate = (from: Date, to: Date) =>
+  new Date(rand(from.getTime(), to.getTime()));
 
 async function* getArticleUrls(n: number) {
   let count = 0;
@@ -56,11 +63,10 @@ async function* getArticleUrls(n: number) {
 
   while (count < n) {
     if (webUrls.length === 0) {
-      const year = Math.floor(2016 + Math.random() * 7);
-      const month = Math.ceil(Math.random() * 12);
-      const date: DateString = `${year}-${month}-15`;
+      const date = randDate(new Date("2012-01-01"), new Date());
+      console.log("Looking up articles from", date);
+
       const url = capiSearchUrl({ date, size: 200 });
-      console.log(url);
 
       const json: unknown = await fetch(url).then((r) => r.json());
       const {
@@ -76,7 +82,10 @@ async function* getArticleUrls(n: number) {
 
     count++;
     const next = webUrls.shift();
-    if (typeof next !== "string") return;
+    if (typeof next !== "string") {
+      console.info("That’s it, folks!", next);
+      return;
+    }
     yield next;
   }
 }
