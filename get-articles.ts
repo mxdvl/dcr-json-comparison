@@ -2,10 +2,14 @@ import { array, literal, number, object, string } from "./zod/zod.ts";
 
 const key = "test";
 
-const capiSearchUrl = (page: number, size = 10) => {
+type DateString = `${number}-${number}-${number}`;
+type Options = { date: DateString; size?: number };
+const capiSearchUrl = ({ date, size = 10 }: Options) => {
   const search = new URLSearchParams({
     "page-size": String(size),
-    page: String(page),
+    // page: String(page),
+    "from-date": date,
+    "to-date": date,
     "api-key": key,
   });
   const url = new URL(
@@ -39,19 +43,24 @@ const resultsSchema = object({
   }),
 });
 
-const json: unknown = await fetch(capiSearchUrl(1, 1)).then((r) => r.json());
+const json: unknown = await fetch(
+  capiSearchUrl({ date: "2022-08-01", size: 1 })
+).then((r) => r.json());
 const {
   response: { total },
 } = totalSchema.parse(json);
 
 async function* getArticleUrls(n: number) {
   let count = 0;
-  let page = 1;
   const webUrls: string[] = [];
 
   while (count < n) {
     if (webUrls.length === 0) {
-      const url = capiSearchUrl(page++, 200);
+      const year = Math.floor(2016 + Math.random() * 7);
+      const month = Math.ceil(Math.random() * 12);
+      const date: DateString = `${year}-${month}-15`;
+      const url = capiSearchUrl({ date, size: 200 });
+      console.log(url);
 
       const json: unknown = await fetch(url).then((r) => r.json());
       const {
