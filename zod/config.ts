@@ -1,0 +1,61 @@
+import { z } from "./zod.ts";
+
+const commercialConfigTypeSchema = z.object({
+  isPaidContent: z.boolean().optional(),
+  pageId: z.string(),
+  webPublicationDate: z.number().optional(),
+  headline: z.string().optional(),
+  author: z.string().optional(),
+  keywords: z.string().optional(),
+  section: z.string().optional(),
+  edition: z.string().optional(),
+  series: z.string().optional(),
+  toneIds: z.string().optional(),
+  contentType: z.string(),
+  ampIframeUrl: z.string(),
+});
+
+const serverSideTestsSchema = z.record(
+  z.union([z.literal("control"), z.literal("variant"), z.undefined()])
+);
+
+export const configTypeSchema = commercialConfigTypeSchema.extend({
+  ajaxUrl: z.string(),
+  sentryPublicApiKey: z.string(),
+  sentryHost: z.string(),
+  dcrSentryDsn: z.string(),
+  switches: z.record(z.boolean()),
+  abTests: serverSideTestsSchema,
+  dfpAccountId: z.string(),
+  commercialBundleUrl: z.string(),
+  revisionNumber: z.string(),
+  shortUrlId: z.string(),
+  isDev: z.boolean().optional(),
+  googletagUrl: z.string(),
+  stage: z.string(),
+  frontendAssetsFullURL: z.string(),
+  adUnit: z.string(),
+  isSensitive: z.boolean(),
+  videoDuration: z.number().optional(),
+  edition: z.string(),
+  section: z.string(),
+  sharedAdTargeting: z.record(z.any()),
+  isPaidContent: z.boolean().optional(),
+  keywordIds: z.string(),
+  showRelatedContent: z.boolean(),
+  shouldHideReaderRevenue: z.boolean().optional(),
+  idApiUrl: z.string(),
+  discussionApiUrl: z.string(),
+  discussionD2Uid: z.string(),
+  discussionApiClientHeader: z.string(),
+  isPhotoEssay: z.boolean().optional(),
+  references: z.array(z.record(z.string())).optional(),
+  host: z.string().optional(),
+  idUrl: z.string().optional(),
+  mmaUrl: z.string().optional(),
+  brazeApiKey: z.string().optional(),
+  ipsosTag: z.string().optional(),
+  isLiveBlog: z.boolean().optional(),
+  isLive: z.boolean().optional(),
+  isPreview: z.boolean().optional(),
+});
