@@ -1,4 +1,4 @@
-import { output, ZodError } from "./zod.ts";
+import { output } from "./zod.ts";
 import {
   any,
   array,
