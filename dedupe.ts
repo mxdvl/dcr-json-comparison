@@ -4,7 +4,7 @@ import { map, object, string, boolean } from "./zod/zod.ts";
 const articlesSchema = map(
   string(),
   object({
-    zod: boolean(),
+    zod: boolean().optional(),
     ajv: boolean().optional(),
   })
 );
