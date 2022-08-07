@@ -1,4 +1,4 @@
-import type { output } from "./zod.ts";
+import { output, ZodError } from "./zod.ts";
 import {
   any,
   array,
@@ -102,7 +102,7 @@ const newsletterSchema = object({
   group: string(),
 });
 
-export const feArticleType = object({
+const feArticleType = object({
   headline: string(),
   standfirst: string(),
   webTitle: string(),
@@ -202,3 +202,6 @@ export const feArticleType = object({
 });
 
 export type FEArticleType = Readonly<output<typeof feArticleType>>;
+
+export const checkZod = (data: unknown): boolean =>
+  feArticleType.safeParse(data).success;
