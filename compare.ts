@@ -32,6 +32,7 @@ for await (const webUrl of getArticleUrls(100_000)) {
     if (!zod) console.warn("Parsing failed:", webUrl);
 
     articles.set(webUrl, { zod, ajv });
+    if (articles.size % 100 === 0) saveArticles();
   } catch (error) {
     if (error instanceof TooManyRequests) {
       const delay = 1200 + Math.random() * 6_000;
@@ -54,6 +55,7 @@ for await (const webUrl of getArticleUrls(100_000)) {
     }
 
     issues.add(webUrl);
+    saveIssues();
   }
 }
 

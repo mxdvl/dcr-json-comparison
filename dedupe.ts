@@ -34,22 +34,16 @@ const getIssues = async () => {
 export const issues = await getIssues();
 console.log(issues.size, "issues recorded (from disk)");
 
-let lastSize = articles.size;
-setInterval(async () => {
-  if (articles.size <= lastSize + 120) return;
-  lastSize = articles.size;
-
+const saveArticles = async () => {
   const output = Object.fromEntries(articles.entries());
   await Deno.writeTextFile(filepath, JSON.stringify(output, null, 2));
   console.log(articles.size, "articles checked");
-}, 120);
+};
 
-let issues_size = issues.size;
-setInterval(async () => {
-  if (issues.size === issues_size) return;
-  issues_size = issues.size;
-
+const saveIssues = async () => {
   const output = [...issues];
   await Deno.writeTextFile(issues_file_path, JSON.stringify(output, null, 2));
   console.log(issues.size, "issues recorded");
-}, 1200);
+};
+
+export { saveArticles, saveIssues };
