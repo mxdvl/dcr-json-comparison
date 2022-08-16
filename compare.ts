@@ -1,6 +1,6 @@
 import { checkAjv } from "./ajv/article-fe.ts";
 import { articles, issues } from "./dedupe.ts";
-import { getArticleUrls, getContent } from "./get-articles.ts";
+import { getArticleUrls, getContent, TooManyRequests } from "./get-articles.ts";
 import { checkZod } from "./zod/article-fe.ts";
 
 const wait = (n: number) =>
@@ -10,11 +10,11 @@ const wait = (n: number) =>
 
 const failed_parsing = new Set<string>();
 const differences = new Set<string>();
-for (const [article, { zod, ajv }] of articles.entries()) {
+for (const [webUrl, { zod, ajv }] of articles.entries()) {
   if (typeof ajv === "boolean" && zod !== ajv) {
-    differences.add(article);
+    differences.add(webUrl);
   }
-  if (!zod) failed_parsing.add(article);
+  if (!zod) failed_parsing.add(webUrl);
 }
 
 console.log("Difference:", differences.size, "/", articles.size);
@@ -25,24 +25,35 @@ for await (const webUrl of getArticleUrls(100_000)) {
     if (articles.has(webUrl)) continue;
 
     const data = await getContent(webUrl);
+
     const zod = checkZod(data);
     const ajv = checkAjv(data);
 
-    if (!zod) console.warn("Failed to parse:", webUrl);
+    if (!zod) console.warn("Parsing failed:", webUrl);
 
     articles.set(webUrl, { zod, ajv });
   } catch (error) {
-    console.warn("Something went wrong with", webUrl);
-    if (error instanceof SyntaxError) console.warn(error.message);
+    if (error instanceof TooManyRequests) {
+      const delay = 1200 + Math.random() * 6_000;
+      console.warn(
+        `Too many request. Waiting for ${(delay / 1000).toFixed(
+          1
+        )}s before checking the next item`
+      );
+      await wait(delay);
+      continue;
+    }
+
+    if (
+      error instanceof SyntaxError &&
+      error.message.includes("is not valid JSON")
+    ) {
+      console.warn("Invalid JSON returned at", webUrl);
+    } else {
+      console.warn("An unknown error happened with", webUrl);
+    }
 
     issues.add(webUrl);
-
-    const delay = 1200 + Math.random() * 6_000;
-    console.warn(
-      `Waiting for ${(delay / 1000).toFixed(1)}s before checking the next item`
-    );
-
-    await wait(delay);
   }
 }
 

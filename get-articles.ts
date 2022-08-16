@@ -77,6 +77,7 @@ async function* getArticleUrls(n: number) {
         ...results
           .map(({ webUrl }) => webUrl)
           .filter((url) => !url.includes("/crosswords/"))
+          .filter((url) => !url.includes("/extra/quiz/"))
       );
     }
 
@@ -90,7 +91,30 @@ async function* getArticleUrls(n: number) {
   }
 }
 
-const getContent = (webUrl: string): Promise<string> =>
-  fetch(`${webUrl}.json?dcr`).then((r) => r.json());
+class PageRemovedError extends SyntaxError {}
+class TooManyRequests extends Error {}
 
-export { total, getContent, getArticleUrls };
+const getContent = async (webUrl: string): Promise<unknown> => {
+  const resp = await fetch(`${webUrl}.json?dcr`);
+  const content = await resp.text();
+  // console.log(content);
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    if (resp.status === 429) {
+      throw new TooManyRequests();
+    }
+
+    if (
+      content.includes(
+        "<title>This page has been removed | The Guardian</title>"
+      )
+    ) {
+      throw new PageRemovedError();
+    }
+
+    throw error;
+  }
+};
+
+export { total, getContent, getArticleUrls, PageRemovedError, TooManyRequests };
