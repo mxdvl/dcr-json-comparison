@@ -62,7 +62,7 @@ async function* getArticleUrls(n: number) {
   const webUrls: string[] = [];
 
   while (count < n) {
-    if (webUrls.length === 0) {
+    if (webUrls.length <= 3) {
       const date = randDate(new Date("2012-01-01"), new Date());
       console.log("Looking up articles from", date);
 
