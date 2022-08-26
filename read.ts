@@ -13,6 +13,20 @@ const getDiff = () => {
 
   console.log("Difference:", differences.size, "/", articles.size);
   console.log("Failures:", failed_parsing.size, "/", articles.size);
+
+  const years: number[] = [];
+  const YYYY = /(19|20)\d{2}/;
+  for (const failed of failed_parsing) {
+    const year = Number(failed.split("/").find((s) => s.match(YYYY)));
+    if (Number.isInteger(year)) {
+      const prev = years[year] ?? 0;
+      years[year] = prev + 1;
+    }
+  }
+
+  years.forEach((count, year) => {
+    console.log(year, ": ", count);
+  });
 };
 
 if (import.meta.main) {

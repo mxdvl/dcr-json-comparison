@@ -12,10 +12,8 @@ const wait = (n: number) =>
 
 getDiff();
 
-for await (const webUrl of getArticleUrls(100_000)) {
+const checkArticle = async (webUrl: string) => {
   try {
-    if (articles.has(webUrl)) continue;
-
     const data = await getContent(webUrl);
 
     const zod = checkZod(data);
@@ -24,6 +22,7 @@ for await (const webUrl of getArticleUrls(100_000)) {
     if (!zod) console.warn("Parsing failed:", webUrl);
 
     articles.set(webUrl, { zod, ajv });
+    issues.delete(webUrl);
     if (articles.size % 100 === 0) saveArticles();
   } catch (error) {
     if (error instanceof TooManyRequests) {
@@ -34,7 +33,7 @@ for await (const webUrl of getArticleUrls(100_000)) {
         )}s before checking the next item`
       );
       await wait(delay);
-      continue;
+      return;
     }
 
     if (
@@ -49,6 +48,20 @@ for await (const webUrl of getArticleUrls(100_000)) {
     issues.add(webUrl);
     saveIssues();
   }
+};
+
+for (const issue of issues) {
+  if (articles.has(issue)) {
+    issues.delete(issue);
+    continue;
+  }
+
+  await checkArticle(issue);
+}
+
+for await (const webUrl of getArticleUrls(100_000)) {
+  if (articles.has(webUrl)) continue;
+  await checkArticle(webUrl);
 }
 
 Deno.exit(0);
