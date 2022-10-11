@@ -17,6 +17,7 @@ const getDiff = () => {
 
 if (import.meta.main) {
   getDiff();
+  console.log(failed_parsing);
   Deno.exit(0);
 }
 
