@@ -15,7 +15,7 @@ const capiSearchUrl = ({ date, size = 10 }: Options) => {
   });
   const url = new URL(
     `search?${search.toString()}`,
-    "https://content.guardianapis.com/"
+    "https://content.guardianapis.com/",
   );
 
   return url.toString();
@@ -39,13 +39,13 @@ const resultsSchema = object({
       object({
         webUrl: string(),
         // webPublicationDate: string(),
-      })
+      }),
     ),
   }),
 });
 
 const json: unknown = await fetch(
-  capiSearchUrl({ date: new Date(), size: 1 })
+  capiSearchUrl({ date: new Date(), size: 1 }),
 ).then((r) => r.json());
 const {
   response: { total },
@@ -77,7 +77,7 @@ async function* getArticleUrls(n: number) {
         ...results
           .map(({ webUrl }) => webUrl)
           .filter((url) => !url.includes("/crosswords/"))
-          .filter((url) => !url.includes("/extra/quiz/"))
+          .filter((url) => !url.includes("/extra/quiz/")),
       );
     }
 
@@ -107,7 +107,7 @@ const getContent = async (webUrl: string): Promise<unknown> => {
 
     if (
       content.includes(
-        "<title>This page has been removed | The Guardian</title>"
+        "<title>This page has been removed | The Guardian</title>",
       )
     ) {
       throw new PageRemovedError();
@@ -117,4 +117,4 @@ const getContent = async (webUrl: string): Promise<unknown> => {
   }
 };
 
-export { total, getContent, getArticleUrls, PageRemovedError, TooManyRequests };
+export { getArticleUrls, getContent, PageRemovedError, TooManyRequests, total };

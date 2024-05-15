@@ -28,9 +28,11 @@ const checkArticle = async (webUrl: string) => {
     if (error instanceof TooManyRequests) {
       const delay = 1200 + Math.random() * 6_000;
       console.warn(
-        `Too many request. Waiting for ${(delay / 1000).toFixed(
-          1
-        )}s before checking the next item`
+        `Too many request. Waiting for ${
+          (delay / 1000).toFixed(
+            1,
+          )
+        }s before checking the next item`,
       );
       await wait(delay);
       return;

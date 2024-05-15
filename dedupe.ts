@@ -1,12 +1,12 @@
 import { infer as Infer, set } from "./zod/zod.ts";
-import { map, object, string, boolean } from "./zod/zod.ts";
+import { boolean, map, object, string } from "./zod/zod.ts";
 
 const articlesSchema = map(
   string(),
   object({
     zod: boolean().optional(),
     ajv: boolean().optional(),
-  })
+  }),
 );
 
 const issues_schema = set(string());

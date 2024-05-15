@@ -40,7 +40,7 @@ const codeBlockElementSchema = z.object({
 
 const contentAtomBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.ContentAtomBlockElement"
+    "model.dotcomrendering.pageElements.ContentAtomBlockElement",
   ),
   elementId: z.string(),
   atomId: z.string(),
@@ -54,7 +54,7 @@ const dividerBlockElementSchema = z.object({
 
 const genericAtomBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.GenericAtomBlockElement"
+    "model.dotcomrendering.pageElements.GenericAtomBlockElement",
   ),
   url: z.string(),
   placeholderUrl: z.string().optional(),
@@ -79,7 +79,7 @@ const itemLinkBlockElementSchema = z.object({
 
 const numberedTitleBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.NumberedTitleBlockElement"
+    "model.dotcomrendering.pageElements.NumberedTitleBlockElement",
   ),
   elementId: z.string(),
   position: z.number(),
@@ -285,7 +285,7 @@ const campaignFieldRadioSchema = campaignFieldSchema.extend({
     z.object({
       label: z.string(),
       value: z.string(),
-    })
+    }),
   ),
 });
 
@@ -295,7 +295,7 @@ const campaignFieldCheckboxSchema = campaignFieldSchema.extend({
     z.object({
       label: z.string(),
       value: z.string(),
-    })
+    }),
   ),
 });
 
@@ -305,7 +305,7 @@ const campaignFieldSelectSchema = campaignFieldSchema.extend({
     z.object({
       label: z.string(),
       value: z.string(),
-    })
+    }),
   ),
 });
 
@@ -378,7 +378,7 @@ const quizAtomBlockElementSchema = z.object({
       title: z.string(),
       shareText: z.string(),
       minScore: z.number(),
-    })
+    }),
   ),
 });
 
@@ -426,7 +426,7 @@ const embedBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
 
 const explainerAtomBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.ExplainerAtomBlockElement"
+    "model.dotcomrendering.pageElements.ExplainerAtomBlockElement",
   ),
   elementId: z.string(),
   id: z.string(),
@@ -475,7 +475,7 @@ const instagramBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
 
 const interactiveAtomBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.InteractiveAtomBlockElement"
+    "model.dotcomrendering.pageElements.InteractiveAtomBlockElement",
   ),
   elementId: z.string(),
   url: z.string(),
@@ -489,7 +489,7 @@ const interactiveAtomBlockElementSchema = z.object({
 
 const interactiveBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.InteractiveBlockElement"
+    "model.dotcomrendering.pageElements.InteractiveBlockElement",
   ),
   elementId: z.string(),
   url: z.string().optional(),
@@ -522,7 +522,7 @@ const mediaAtomBlockElementSchema = z.object({
       z.object({
         url: z.string(),
         width: z.number(),
-      })
+      }),
     )
     .optional(),
   title: z.string().optional(),
@@ -531,7 +531,7 @@ const mediaAtomBlockElementSchema = z.object({
 
 const newsletterSignupBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.NewsletterSignupBlockElement"
+    "model.dotcomrendering.pageElements.NewsletterSignupBlockElement",
   ),
   newsletter: newsletterSchema,
   elementId: z.string().optional(),
@@ -539,7 +539,7 @@ const newsletterSignupBlockElementSchema = z.object({
 
 const interactiveContentsBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.InteractiveContentsBlockElement"
+    "model.dotcomrendering.pageElements.InteractiveContentsBlockElement",
   ),
   elementId: z.string(),
   subheadingLinks: z.array(subheadingBlockElementSchema),
@@ -548,7 +548,7 @@ const interactiveContentsBlockElementSchema = z.object({
 
 const profileAtomBlockElementSchema = z.object({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.ProfileAtomBlockElement"
+    "model.dotcomrendering.pageElements.ProfileAtomBlockElement",
   ),
   elementId: z.string(),
   id: z.string(),
@@ -644,7 +644,7 @@ const videoBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
 
 const videoFacebookBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.VideoFacebookBlockElement"
+    "model.dotcomrendering.pageElements.VideoFacebookBlockElement",
   ),
   elementId: z.string(),
   url: z.string(),
@@ -671,7 +671,7 @@ const videoVimeoBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
 
 const videoYoutubeBlockElementSchema = thirdPartyEmbeddedContentSchema.extend({
   _type: z.literal(
-    "model.dotcomrendering.pageElements.VideoYoutubeBlockElement"
+    "model.dotcomrendering.pageElements.VideoYoutubeBlockElement",
   ),
   elementId: z.string(),
   embedUrl: z.string().optional(),
@@ -698,7 +698,7 @@ const youtubeBlockElementSchema = z.object({
       z.object({
         url: z.string(),
         width: z.number(),
-      })
+      }),
     )
     .optional(),
   expired: z.boolean(),

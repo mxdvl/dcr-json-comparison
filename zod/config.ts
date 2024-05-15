@@ -16,7 +16,7 @@ const commercialConfigTypeSchema = z.object({
 });
 
 const serverSideTestsSchema = z.record(
-  z.union([z.literal("control"), z.literal("variant"), z.undefined()])
+  z.union([z.literal("control"), z.literal("variant"), z.undefined()]),
 );
 
 export const configTypeSchema = commercialConfigTypeSchema.extend({

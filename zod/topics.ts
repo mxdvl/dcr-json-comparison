@@ -1,4 +1,4 @@
-import { number, object, string, enum as union } from "./zod.ts";
+import { enum as union, number, object, string } from "./zod.ts";
 
 const topicTypeSchema = union([
   "ORG",
